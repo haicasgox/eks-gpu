@@ -1,0 +1,28 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gpu
+  labels:
+    app: gpu
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gpu
+  template:
+    metadata:
+      labels:
+        app: gpu
+    spec:
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: gpu-container
+        image: tensorflow/tensorflow:latest-gpu
+        imagePullPolicy: Always
+        command: ["sleep","infinity"]
+        resources:
+          limits:
+            nvidia.com/gpu: 1
